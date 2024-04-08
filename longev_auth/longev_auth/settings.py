@@ -25,7 +25,10 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "rest_framework",
+    "rest_framework.authtoken",
+    "djoser",
     "users.apps.UsersConfig",
+    "authentication.apps.AuthConfig",
 ]
 
 MIDDLEWARE = [
@@ -91,6 +94,34 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+REST_FRAMEWORK = {
+    "DEFAULT_PERMISSION_CLASSES": (
+        "rest_framework.permissions.IsAuthenticatedOrReadOnly",
+    ),
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework.authentication.TokenAuthentication",
+    ),
+    # "DEFAULT_FILTER_BACKENDS": [
+    #     "django_filters.rest_framework.DjangoFilterBackend"
+    # ],
+    "NON_FIELD_ERRORS_KEY": "errors",
+    # "DEFAULT_PAGINATION_CLASS": "api.pagination.PageLimitPagination",
+}
+
+DJOSER = {
+    "PASSWORD_RESET_CONFIRM_URL": "#/password/reset/confirm/{uid}/{token}",
+    # "USERNAME_RESET_CONFIRM_URL": "#/username/reset/confirm/{uid}/{token}",
+    "ACTIVATION_URL": "#/activate/{uid}/{token}",
+    "SEND_ACTIVATION_EMAIL": True,
+    "PASSWORD_CHANGED_EMAIL_CONFIRMATION": True,
+    "PASSWORD_RESET_SHOW_EMAIL_NOT_FOUND": True,
+    # "SERIALIZERS": {
+    #     "user_create": "djoser.serializers.UserCreateSerializer",
+    #     "user_delete": "djoser.serializers.UserDeleteSerializer",
+    #     "user": "djoser.serializers.UserSerializer",
+    #     "current_user": "djoser.serializers.UserSerializer",
+    # },
+}
 
 LANGUAGE_CODE = "en-us"
 
@@ -115,3 +146,6 @@ AUTH_USER_MODEL = "users.User"
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
+EMAIL_FILE_PATH = os.path.join(BASE_DIR, "sent_emails")

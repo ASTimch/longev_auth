@@ -17,6 +17,9 @@ class User(AbstractUser):
         null=False,
         unique=True,
         validators=[UnicodeUsernameValidator(), MinLengthValidator(2)],
+        error_messages={
+            "unique": "This email already in use",
+        },
     )
 
     email = models.EmailField(
