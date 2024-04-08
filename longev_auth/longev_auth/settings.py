@@ -27,6 +27,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "rest_framework.authtoken",
     "djoser",
+    "drf_yasg",
     "users.apps.UsersConfig",
     "authentication.apps.AuthConfig",
 ]
@@ -115,12 +116,12 @@ DJOSER = {
     "SEND_ACTIVATION_EMAIL": True,
     "PASSWORD_CHANGED_EMAIL_CONFIRMATION": True,
     "PASSWORD_RESET_SHOW_EMAIL_NOT_FOUND": True,
-    # "SERIALIZERS": {
-    #     "user_create": "djoser.serializers.UserCreateSerializer",
-    #     "user_delete": "djoser.serializers.UserDeleteSerializer",
-    #     "user": "djoser.serializers.UserSerializer",
-    #     "current_user": "djoser.serializers.UserSerializer",
-    # },
+    "SERIALIZERS": {
+        # "user_create": "djoser.serializers.UserCreateSerializer",
+        # "user_delete": "djoser.serializers.UserDeleteSerializer",
+        # "user": "djoser.serializers.UserSerializer",
+        "current_user": "authentication.serializers.CustomCurrentUserSerializer",
+    },
 }
 
 LANGUAGE_CODE = "en-us"
@@ -149,3 +150,16 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
 EMAIL_FILE_PATH = os.path.join(BASE_DIR, "sent_emails")
+
+SWAGGER_SETTINGS = {
+    "SHOW_REQUEST_HEADERS": True,
+    "SECURITY_DEFINITIONS": {
+        "Bearer": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header",
+        }
+    },
+    # "USE_SESSION_AUTH": False,
+    # "JSON_EDITOR": True,
+}
