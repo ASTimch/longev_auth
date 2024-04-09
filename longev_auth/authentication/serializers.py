@@ -8,4 +8,8 @@ class CustomCurrentUserSerializer(UserSerializer):
     class Meta:
         model = User
         fields = ("id", "email", "username", "first_name", "last_name")
-        read_only_fields = ("id", "email")
+        read_only_fields = (
+            "id",
+            "email",
+            "username",
+        )
