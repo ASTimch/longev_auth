@@ -1,4 +1,5 @@
 import os
+from datetime import timedelta
 from pathlib import Path
 
 from dotenv import load_dotenv
@@ -25,8 +26,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "rest_framework",
-    "rest_framework.authtoken",
-    "djoser",
+    "rest_framework_simplejwt",
     "drf_yasg",
     "users.apps.UsersConfig",
     "authentication.apps.AuthConfig",
@@ -101,28 +101,14 @@ REST_FRAMEWORK = {
         "rest_framework.permissions.IsAuthenticatedOrReadOnly",
     ),
     "DEFAULT_AUTHENTICATION_CLASSES": (
-        "rest_framework.authentication.TokenAuthentication",
+        # "rest_framework.authentication.TokenAuthentication",
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
     ),
     # "DEFAULT_FILTER_BACKENDS": [
     #     "django_filters.rest_framework.DjangoFilterBackend"
     # ],
     "NON_FIELD_ERRORS_KEY": "errors",
     # "DEFAULT_PAGINATION_CLASS": "api.pagination.PageLimitPagination",
-}
-
-DJOSER = {
-    "PASSWORD_RESET_CONFIRM_URL": "#/password/reset/confirm/{uid}/{token}",
-    # "USERNAME_RESET_CONFIRM_URL": "#/username/reset/confirm/{uid}/{token}",
-    "ACTIVATION_URL": "#/activate/{uid}/{token}",
-    "SEND_ACTIVATION_EMAIL": True,
-    "PASSWORD_CHANGED_EMAIL_CONFIRMATION": True,
-    "PASSWORD_RESET_SHOW_EMAIL_NOT_FOUND": True,
-    "SERIALIZERS": {
-        # "user_create": "djoser.serializers.UserCreateSerializer",
-        # "user_delete": "djoser.serializers.UserDeleteSerializer",
-        # "user": "djoser.serializers.UserSerializer",
-        "current_user": "authentication.serializers.CustomCurrentUserSerializer",
-    },
 }
 
 LANGUAGE_CODE = "en-us"
@@ -162,5 +148,17 @@ SWAGGER_SETTINGS = {
         }
     },
     # "USE_SESSION_AUTH": False,
-    # "JSON_EDITOR": True,
+    "JSON_EDITOR": True,
+}
+
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=60),
+    # "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
+    # "ROTATE_REFRESH_TOKENS": True,
+    "AUTH_HEADER_TYPES": ("Bearer",),
+    # "USER_AUTHENTICATION_RULE": "rest_framework_simplejwt.authentication.default_user_authentication_rule",
+    "UPDATE_LAST_LOGIN": True,
+    # "AUTH_TOKEN_CLASSES": ("rest_framework_simplejwt.tokens.AccessToken",),
+    # "TOKEN_TYPE_CLAIM": "token_type",
+    # "TOKEN_USER_CLASS": "rest_framework_simplejwt.models.TokenUser",
 }

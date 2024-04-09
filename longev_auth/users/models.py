@@ -1,7 +1,6 @@
-from core.constants import Limits
+from core.constants import Limits, Messages
 from django.contrib.auth.models import AbstractUser
-from django.contrib.auth.validators import UnicodeUsernameValidator
-from django.core.validators import MinLengthValidator
+from django.core.validators import EmailValidator
 from django.db import models
 
 
@@ -10,25 +9,16 @@ class User(AbstractUser):
     Custom User model.
     """
 
-    username = models.CharField(
-        verbose_name="User name",
-        help_text="Please enter your unique username",
-        max_length=Limits.USERNAME_LENGTH,
-        blank=False,
-        null=False,
-        unique=True,
-        validators=[UnicodeUsernameValidator(), MinLengthValidator(2)],
-        error_messages={
-            "unique": "This email already in use",
-        },
-    )
-
     email = models.EmailField(
         verbose_name="Email address",
         blank=False,
         null=False,
         unique=True,
         max_length=Limits.EMAIL_LENGTH,
+        error_messages={
+            "unique": Messages.EMAIL_ALREADY_EXISTS,
+        },
+        validators=(EmailValidator(),),
     )
 
     first_name = models.CharField(
@@ -45,6 +35,16 @@ class User(AbstractUser):
         null=True,
     )
 
+    password = models.CharField(
+        max_length=255,
+    )
+
+    @property
+    def full_name(self):
+        if self.first_name or self.last_name:
+            return self.first_name + " " + self.last_name
+        return self.email
+
     class Meta:
         verbose_name = "User"
         verbose_name_plural = "Users"
@@ -54,4 +54,4 @@ class User(AbstractUser):
         ]
 
     def __str__(self):
-        return f"{self.id}:{self.username}"
+        return f"{self.id}:{self.email}"

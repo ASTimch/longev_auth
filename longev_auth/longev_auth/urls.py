@@ -23,7 +23,6 @@ from drf_yasg.views import get_schema_view
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("auth/", include("authentication.urls")),
-    # url(r"^auth/", include("djoser.urls.authtoken")),
 ]
 
 schema_view = get_schema_view(
