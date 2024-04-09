@@ -19,9 +19,11 @@ class Messages:
     EMAIL_ALREADY_EXISTS: Final = "Email already exists!"
     PROFILE_IS_INACTIVE: Final = "User profile has been deactivated"
     INCORRECT_PASSWORD: Final = "Provided password is incorrect"
+    INCORRECT_OTP: Final = "Provided otp code is incorrect"
     PASSWORD_WRONG_FORMAT: Final = (
         f"Password should have from {Limits.MIN_PASSWORD_LENGTH}"
         " to {Limits.MAX_PASSWORD_LENGTH} characters"
     )
     PROFILE_UPDATED: Final = "Profile has been updated"
     PROFILE_DELETED: Final = "Profile has been deleted"
+    OTP_SENT_TO_EMAIL: Final = "Password code sent to your email {email}"

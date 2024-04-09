@@ -9,14 +9,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 load_dotenv()
 
 SECRET_KEY = os.getenv("SECRET_KEY", "django-insecure-key")
-
 DEBUG = os.getenv("DEBUG", "false").lower() == "true"
-
 DOMAIN_URL = os.getenv("DOMAIN_URL", "localhost")
-
 DOMAIN = DOMAIN_URL if DEBUG else ""
-
 ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "").split()
+OTP_LENGTH = int(os.getenv("OTP_LENGTH", 6))
+OTP_LIFETIME = int(os.getenv("OTP_LENGTH", 600))
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -153,12 +151,9 @@ SWAGGER_SETTINGS = {
 
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=60),
-    # "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
-    # "ROTATE_REFRESH_TOKENS": True,
     "AUTH_HEADER_TYPES": ("Bearer",),
-    # "USER_AUTHENTICATION_RULE": "rest_framework_simplejwt.authentication.default_user_authentication_rule",
     "UPDATE_LAST_LOGIN": True,
-    # "AUTH_TOKEN_CLASSES": ("rest_framework_simplejwt.tokens.AccessToken",),
+    "AUTH_TOKEN_CLASSES": ("rest_framework_simplejwt.tokens.AccessToken",),
     # "TOKEN_TYPE_CLAIM": "token_type",
     # "TOKEN_USER_CLASS": "rest_framework_simplejwt.models.TokenUser",
 }

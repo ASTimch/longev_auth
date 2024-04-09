@@ -1,7 +1,8 @@
-from core.constants import Limits, Messages
 from django.contrib.auth.models import AbstractUser
 from django.core.validators import EmailValidator
 from django.db import models
+
+from core.constants import Limits, Messages
 
 
 class User(AbstractUser):

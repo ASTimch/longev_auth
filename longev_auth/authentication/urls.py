@@ -1,7 +1,13 @@
 from django.urls import include, path
 from rest_framework.routers import DefaultRouter
 
-from .views import PasswordAuthView, ProfileView, SignUpView
+from .views import (
+    OtpAuthView,
+    OtpRequestView,
+    PasswordAuthView,
+    ProfileView,
+    SignUpView,
+)
 
 app_name = "authentication"
 
@@ -15,7 +21,8 @@ user_urlpatterns = [
 
 auth_urlpatterns = [
     path("token-pwd/", PasswordAuthView.as_view()),
-    # path("token-otp/", AuthView.as_view()),
+    path("otp/", OtpRequestView.as_view()),
+    path("token-otp/", OtpAuthView.as_view()),
 ]
 
 urlpatterns = [
