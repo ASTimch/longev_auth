@@ -1,10 +1,12 @@
 import base64
 import os
-from datetime import datetime
 
 import pyotp
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
+from django.core.mail import EmailMessage, send_mail
+from django.template import Context
+from django.template.loader import get_template
 from django.utils import timezone
 from rest_framework_simplejwt.tokens import RefreshToken
 
@@ -36,3 +38,26 @@ def is_valid_user_otp(user, otp: str) -> bool:
         return True
     except ObjectDoesNotExist:
         return False
+
+
+def send_otp_email(user, otp):
+    # send_mail(
+    #     subject = "Authorization",
+    #     message = "You login data: email {email}  otp_code {otp}".format(
+    #         email=user.email, otp=otp
+    #     ),
+    #     None,
+    #     [user.email],
+    #     fail_silently=False,
+    # )
+    context = {"fullname": user.full_name, "email": user.email, "otp": otp}
+    message = get_template("otp_auth_template.html").render(context)
+    mail = EmailMessage(
+        subject="Longevity authorization credentials",
+        body=message,
+        from_email=None,
+        to=[user.email],
+        reply_to=["noreply"],
+    )
+    mail.content_subtype = "html"
+    mail.send(fail_silently=False)

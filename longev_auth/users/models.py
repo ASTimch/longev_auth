@@ -10,6 +10,7 @@ class User(AbstractUser):
     Custom User model.
     """
 
+    username = None
     email = models.EmailField(
         verbose_name="Email address",
         blank=False,
@@ -39,6 +40,9 @@ class User(AbstractUser):
     password = models.CharField(
         max_length=255,
     )
+
+    USERNAME_FIELD = "email"
+    REQUIRED_FIELDS = []
 
     @property
     def full_name(self):

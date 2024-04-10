@@ -4,7 +4,6 @@ from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.hashers import check_password
 from django.core.exceptions import ObjectDoesNotExist
-from django.core.mail import send_mail
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from drf_yasg.utils import swagger_auto_schema
@@ -23,8 +22,13 @@ from .serializers import (
     TokenSerializer,
     UpdateUserSerializer,
 )
+from authentication.utils import (
+    generate_otp_code,
+    get_user_token,
+    is_valid_user_otp,
+    send_otp_email,
+)
 from core.constants import Messages
-from core.utils import generate_otp_code, get_user_token, is_valid_user_otp
 
 User = get_user_model()
 
@@ -33,6 +37,7 @@ class SignUpView(generics.CreateAPIView):
     """Create new user."""
 
     serializer_class = CreateUserSerializer
+    permission_classes = (AllowAny,)
     queryset = User.objects.all()
 
 
@@ -110,15 +115,7 @@ class OtpRequestView(APIView):
         exp_time = timezone.now() + timedelta(minutes=settings.OTP_LIFETIME)
         otp_model = OtpCode(otp=otp, user=user, exp_time=exp_time)
         otp_model.save()
-        send_mail(
-            "Authorization",
-            "You login data: email {email}  otp_code {otp}".format(
-                email=user.email, otp=otp
-            ),
-            None,
-            [user.email],
-            fail_silently=False,
-        )
+        send_otp_email(user, otp)
         return Response(
             {"message": Messages.OTP_SENT_TO_EMAIL.format(email=user.email)},
             status=status.HTTP_200_OK,
