@@ -22,7 +22,7 @@ from .serializers import (
     TokenSerializer,
     UpdateUserSerializer,
 )
-from authentication.utils import (
+from api.utils import (
     generate_otp_code,
     get_user_token,
     is_valid_user_otp,
@@ -49,7 +49,6 @@ class ProfileView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAuthenticated]
 
     def get_object(self):
-        """Get authorized user profile."""
         return self.request.user
 
     def put(self, request, *args, **kwargs):
@@ -58,10 +57,7 @@ class ProfileView(generics.RetrieveUpdateDestroyAPIView):
         serializer = self.get_serializer(instance, data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
-        return Response(
-            {"data": serializer.data, "message": Messages.PROFILE_UPDATED},
-            status=status.HTTP_200_OK,
-        )
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
     def delete(self, request, *args, **kwargs):
         """Delete user profile."""
@@ -112,7 +108,7 @@ class OtpRequestView(APIView):
         except ObjectDoesNotExist:
             pass
         otp = generate_otp_code()
-        exp_time = timezone.now() + timedelta(minutes=settings.OTP_LIFETIME)
+        exp_time = timezone.now() + timedelta(seconds=settings.OTP_LIFETIME)
         otp_model = OtpCode(otp=otp, user=user, exp_time=exp_time)
         otp_model.save()
         send_otp_email(user, otp)

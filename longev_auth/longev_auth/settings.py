@@ -14,7 +14,7 @@ DOMAIN_URL = os.getenv("DOMAIN_URL", "localhost")
 DOMAIN = DOMAIN_URL if DEBUG else ""
 ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "").split()
 OTP_LENGTH = int(os.getenv("OTP_LENGTH", 6))
-OTP_LIFETIME = int(os.getenv("OTP_LENGTH", 600))
+OTP_LIFETIME = int(os.getenv("OTP_LIFETIME", 600))
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -27,7 +27,7 @@ INSTALLED_APPS = [
     "rest_framework_simplejwt",
     "drf_yasg",
     "users.apps.UsersConfig",
-    "authentication.apps.AuthConfig",
+    "api.apps.AuthConfig",
     "core.apps.CoreConfig",
 ]
 
@@ -104,11 +104,7 @@ REST_FRAMEWORK = {
         # "rest_framework.authentication.TokenAuthentication",
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ),
-    # "DEFAULT_FILTER_BACKENDS": [
-    #     "django_filters.rest_framework.DjangoFilterBackend"
-    # ],
     "NON_FIELD_ERRORS_KEY": "errors",
-    # "DEFAULT_PAGINATION_CLASS": "api.pagination.PageLimitPagination",
 }
 
 LANGUAGE_CODE = "en-us"
@@ -148,7 +144,6 @@ SWAGGER_SETTINGS = {
             "in": "header",
         }
     },
-    # "USE_SESSION_AUTH": False,
     "JSON_EDITOR": True,
 }
 
@@ -157,15 +152,6 @@ SIMPLE_JWT = {
     "AUTH_HEADER_TYPES": ("Bearer",),
     "UPDATE_LAST_LOGIN": True,
     "AUTH_TOKEN_CLASSES": ("rest_framework_simplejwt.tokens.AccessToken",),
-    # "TOKEN_TYPE_CLAIM": "token_type",
-    # "TOKEN_USER_CLASS": "rest_framework_simplejwt.models.TokenUser",
 }
 
 CELERY_BROKER_URL = os.getenv("CELERY_BROKER_URL", "redis://localhost:6379/0")
-# CELERY_RESULT_BACKEND = "redis://localhost:6379/0"
-# CELERY_TASK_TRACK_STARTED = True
-# CELERY_TASK_TIME_LIMIT = 30 * 60
-# CELERY_ACCEPT_CONTENT = ["application/json"]
-# CELERY_RESULT_SERIALIZER = "json"
-# CELERY_TASK_SERIALIZER = "json"
-# CELERY_TIMEZONE = "Europe/Moscow"

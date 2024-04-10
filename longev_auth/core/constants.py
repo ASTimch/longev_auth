@@ -27,3 +27,4 @@ class Messages:
     PROFILE_UPDATED: Final = "Profile has been updated"
     PROFILE_DELETED: Final = "Profile has been deleted"
     OTP_SENT_TO_EMAIL: Final = "Password code sent to your email {email}"
+    OTP_EMAIL_SUBJECT: Final = "Longevity authorization credentials"

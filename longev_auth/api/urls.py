@@ -9,7 +9,7 @@ from .views import (
     SignUpView,
 )
 
-app_name = "authentication"
+app_name = "api"
 
 router = DefaultRouter()
 

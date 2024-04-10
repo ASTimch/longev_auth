@@ -27,4 +27,4 @@ class OtpCode(models.Model):
         verbose_name_plural = "Otp codes"
 
     def __str__(self):
-        return f"{self.id}: {self.otp}"
+        return f"{self.pk}: {self.otp}"

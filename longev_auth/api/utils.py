@@ -1,6 +1,5 @@
 import base64
 import os
-import smtplib
 
 import pyotp
 from django.conf import settings
@@ -11,6 +10,7 @@ from django.utils import timezone
 from rest_framework_simplejwt.tokens import RefreshToken
 
 from .tasks import send_email
+from core.constants import Messages
 
 
 def get_user_token(user):
@@ -25,8 +25,7 @@ def generate_otp_code():
         base64.b32encode(os.urandom(16)).decode(),
         digits=settings.OTP_LENGTH,
     )
-    otp = totp.now()
-    return otp
+    return totp.now()
 
 
 def is_valid_user_otp(user, otp: str) -> bool:
@@ -34,7 +33,6 @@ def is_valid_user_otp(user, otp: str) -> bool:
         user_otp = user.otp
         if user_otp.otp != otp:
             return False
-        print("otp.exp_time ", user_otp.exp_time, "now", timezone.now())
         if user_otp.exp_time < timezone.now():
             return False
         return True
@@ -46,7 +44,7 @@ def send_otp_email(user, otp) -> EmailMessage:
     context = {"fullname": user.full_name, "email": user.email, "otp": otp}
     message_body = get_template("otp_auth_template.html").render(context)
     send_email.delay(
-        subject="Longevity authorization credentials",
+        subject=Messages.OTP_EMAIL_SUBJECT,
         body=message_body,
         from_email=None,
         to=[user.email],
