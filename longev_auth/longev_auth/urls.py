@@ -22,7 +22,7 @@ from drf_yasg.views import get_schema_view
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("auth/", include("authentication.urls")),
+    path("", include("authentication.urls"), name="auth"),
 ]
 
 schema_view = get_schema_view(

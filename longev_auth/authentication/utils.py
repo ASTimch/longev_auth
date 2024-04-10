@@ -1,14 +1,16 @@
 import base64
 import os
+import smtplib
 
 import pyotp
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
-from django.core.mail import EmailMessage, send_mail
-from django.template import Context
+from django.core.mail import EmailMessage
 from django.template.loader import get_template
 from django.utils import timezone
 from rest_framework_simplejwt.tokens import RefreshToken
+
+from .tasks import send_email
 
 
 def get_user_token(user):
@@ -40,24 +42,14 @@ def is_valid_user_otp(user, otp: str) -> bool:
         return False
 
 
-def send_otp_email(user, otp):
-    # send_mail(
-    #     subject = "Authorization",
-    #     message = "You login data: email {email}  otp_code {otp}".format(
-    #         email=user.email, otp=otp
-    #     ),
-    #     None,
-    #     [user.email],
-    #     fail_silently=False,
-    # )
+def send_otp_email(user, otp) -> EmailMessage:
     context = {"fullname": user.full_name, "email": user.email, "otp": otp}
-    message = get_template("otp_auth_template.html").render(context)
-    mail = EmailMessage(
+    message_body = get_template("otp_auth_template.html").render(context)
+    send_email.delay(
         subject="Longevity authorization credentials",
-        body=message,
+        body=message_body,
         from_email=None,
         to=[user.email],
         reply_to=["noreply"],
+        content_subtype="html",
     )
-    mail.content_subtype = "html"
-    mail.send(fail_silently=False)
