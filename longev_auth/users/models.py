@@ -2,6 +2,7 @@ from django.contrib.auth.models import AbstractUser
 from django.core.validators import EmailValidator
 from django.db import models
 
+from .managers import CustomUserManager
 from core.constants import Limits, Messages
 
 
@@ -43,6 +44,7 @@ class User(AbstractUser):
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
+    objects = CustomUserManager()
 
     @property
     def full_name(self):
