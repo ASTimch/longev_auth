@@ -9,7 +9,7 @@ services:
   db:
     image: postgres:13.0-alpine
     container_name: longev_db
-    env_file: ../.env
+    env_file: ../.env-prod
     volumes:
       - longev_pg_data:/var/lib/postgresql/data
     restart: always
@@ -23,7 +23,7 @@ services:
     image: longev_image
     build: ../longev_auth/
     container_name: longev_app
-    env_file: ../.env
+    env_file: ../.env-prod
     depends_on:
       db:
         condition: service_healthy
@@ -43,7 +43,7 @@ services:
     container_name: longev_celery
     command: sh -c "celery -A longev_auth worker -l INFO"
     env_file:
-      - ../.env
+      - ../.env-prod
     depends_on:
       - redis
       - backend
