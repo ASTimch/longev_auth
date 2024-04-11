@@ -1,0 +1,64 @@
+name: longev
+version: '3.3'
+
+volumes:
+  longev_pg_data:
+  longev_static:
+
+services:
+  db:
+    image: postgres:13.0-alpine
+    container_name: longev_db
+    env_file: ../.env-prod
+    volumes:
+      - longev_pg_data:/var/lib/postgresql/data
+    restart: always
+    healthcheck:  
+      test: ["CMD-SHELL", "-c", "pg_isready -q -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 20s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    image: longev_image
+    build: ../longev_auth/
+    container_name: longev_app
+    env_file: ../.env-prod
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - longev_static:/backend_static
+    command: ["/app/run.sh"]
+
+  redis:
+    image: redis:7
+    container_name: longev_redis
+    expose:
+      - 6379
+
+  celery:
+    image: longev_image
+    build: ../longev_auth/
+    container_name: longev_celery
+    command: sh -c "celery -A longev_auth worker -l INFO"
+    env_file:
+      - ../.env-prod
+    depends_on:
+      - redis
+      - backend
+    restart: always
+
+  nginx:
+    image: nginx:1.19.3
+    container_name: longev_nginx
+    ports:
+      - "80:80"
+      - 443:443
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+      - longev_static:/etc/nginx/html/static/
+    depends_on:
+      - backend
+
+
