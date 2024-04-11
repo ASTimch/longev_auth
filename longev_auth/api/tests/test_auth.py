@@ -161,7 +161,7 @@ class TestOtpAuthView(APITestCase):
             password=make_password(cls.inactive_user_raw_password),
         )
         exp_time = timezone.now() + timedelta(minutes=10)
-        cls.inactive_user = OtpCode.objects.create(
+        cls.inactive_user_otp = OtpCode.objects.create(
             user=cls.inactive_user, otp="345678", exp_time=exp_time
         )
 
