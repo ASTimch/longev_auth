@@ -31,31 +31,31 @@ docker-compose up --build
 
 ```
 
-### Create superuser
+#### Create superuser
 
 ```
 sudo docker-compose exec backend python manage.py createsuperuser
 ```
 
-### Admin panel available at:
+#### Admin panel available at:
 ```
 http://localhost/admin/
 ```
 
-### Run tests
+#### Run tests
 Run descriptive tests in the container using:
 ```
 docker-compose exec backend python manage.py test
 ```
 
-### API docs available at:
+#### API docs available at:
 
 ```
 http://localhost/swagger/
 http://localhost/redoc/
 ```
 
-### Shut down containers
+#### Shut down containers
 ```
 sudo docker-compose down
 ```
@@ -109,9 +109,13 @@ python manage.py runserver
 celery -A longev_auth worker -l info
 ```
 
-### API docs available at:
+#### API docs available at:
 
 ```
 http://localhost:8000/swagger/
 http://localhost:8000/redoc/
 ```
+
+## Deployed project info available at 
+
+https://longev-auth-ashen.vercel.app/swagger/
